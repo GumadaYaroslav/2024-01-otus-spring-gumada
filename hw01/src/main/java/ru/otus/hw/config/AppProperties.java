@@ -5,7 +5,6 @@ import lombok.Data;
 
 @AllArgsConstructor
 @Data
-// todo создать бин
 public class AppProperties implements TestFileNameProvider {
     private String testFileName;
 }
