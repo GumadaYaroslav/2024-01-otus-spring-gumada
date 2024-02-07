@@ -8,8 +8,9 @@ import ru.otus.hw.dao.dto.QuestionDto;
 import ru.otus.hw.domain.Question;
 import ru.otus.hw.exceptions.QuestionReadException;
 
-import java.io.*;
-import java.net.URL;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -19,7 +20,8 @@ public class CsvQuestionDao implements QuestionDao {
     @Override
     public List<Question> findAll() {
         try {
-            InputStream questionsCsvStream = getClass().getClassLoader().getResourceAsStream(fileNameProvider.getTestFileName());
+            InputStream questionsCsvStream = getClass().getClassLoader()
+                    .getResourceAsStream(fileNameProvider.getTestFileName());
             Reader questionsFR = new InputStreamReader(questionsCsvStream);
             CsvToBean<QuestionDto> build = new CsvToBeanBuilder(questionsFR)
                     .withType(QuestionDto.class)
