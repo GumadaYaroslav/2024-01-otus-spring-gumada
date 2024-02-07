@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class CsvQuestionDaoTest {
 
-    private static final String VALID_CSV_PATH = "questions.csv";
+    private static final String VALID_CSV_PATH = "test_questions.csv";
     private static final String NOT_VALID_CSV_PATH = "not_existing_file.csv";
 
     @Test
