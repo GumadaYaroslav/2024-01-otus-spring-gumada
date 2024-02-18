@@ -11,6 +11,7 @@ public class QuestionDto {
 
     @CsvBindByPosition(position = 0)
     private String text;
+
     @CsvBindByPosition(position = 1)
     private String answer;
 

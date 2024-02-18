@@ -9,11 +9,13 @@ import ru.otus.hw.service.IOService;
 @RequiredArgsConstructor
 public class ConsoleStudentDao implements StudentDao {
 
-    private final IOService ioService;
-
     private static final String HELLO_USER = "Hollow user!";
+
     private static final String ENTER_FIRST_NAME = "Enter first name:";
+
     private static final String ENTER_SECOND_NAME = "Enter last name:";
+
+    private final IOService ioService;
 
     @Override
     public Student getInfo() {
