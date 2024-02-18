@@ -18,8 +18,8 @@ public class ConsoleStudentDao implements StudentDao {
     @Override
     public Student getInfo() {
         ioService.printLine(HELLO_USER);
-        String firstName = ioService.scanWithLegend(ENTER_FIRST_NAME);
-        String lastName = ioService.scanWithLegend(ENTER_SECOND_NAME);
+        String firstName = ioService.readStringWithPrompt(ENTER_FIRST_NAME);
+        String lastName = ioService.readStringWithPrompt(ENTER_SECOND_NAME);
 
         return new Student(firstName, lastName);
     }

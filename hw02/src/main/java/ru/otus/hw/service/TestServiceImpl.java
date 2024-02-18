@@ -1,29 +1,35 @@
 package ru.otus.hw.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import ru.otus.hw.dao.CsvQuestionDao;
-import ru.otus.hw.dao.StudentDao;
-import ru.otus.hw.domain.Question;
+import org.springframework.stereotype.Component;
+import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.Student;
+import ru.otus.hw.domain.TestResult;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class TestServiceImpl implements TestService {
+
     private final IOService ioService;
 
-    private final CsvQuestionDao csvQuestionDao;
-
-    private final StudentDao studentDao;
+    private final QuestionDao questionDao;
 
     @Override
-    public void executeTest() {
-        Student nameInfo = studentDao.getInfo();
-        ioService.printLine("Lets start the test mister/misses %s %s".formatted(
-                nameInfo.firstName(),
-                nameInfo.lastName()));
-        for (Question question : csvQuestionDao.findAll()) {
-            ioService.printLine(question.text());
+    public TestResult executeTestFor(Student student) {
+        ioService.printLine("");
+        ioService.printFormattedLine("Please answer the questions below%n");
+        var questions = questionDao.findAll();
+        var testResult = new TestResult(student);
+
+        for (var question: questions) {
+            String answerFromUser = ioService.readStringWithPrompt(question.text());
+
+            var isAnswerValid = false;
+            if (question.answer().text().equals(answerFromUser)) {
+                isAnswerValid = true;
+            }
+            testResult.applyAnswer(question, isAnswerValid);
         }
+        return testResult;
     }
 }

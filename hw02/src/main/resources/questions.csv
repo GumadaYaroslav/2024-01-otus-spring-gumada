@@ -1,6 +1,6 @@
 # Добавить сюда своих вопросов. Эту строку надо пропустить при настройке CsvToBean (withSkipLines)
-How many planets are there in the solar system?
-What is the name of your favorite musician?
-Would you buy my monkey?
-Is there an afterlife?
-Who wrote The Plague (1947)?
+How many planets are there in the solar system?;8
+Would you buy my monkey?(Type Yes or No);Yes
+How many bits in byte?;8
+How many byres in kilobyte?;1024
+How many kilobyte in megabyte?;1024

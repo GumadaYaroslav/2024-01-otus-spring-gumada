@@ -5,7 +5,11 @@ public interface IOService {
 
     void printFormattedLine(String s, Object ...args);
 
-    String scanWithLegend(String legend);
+    String readString();
 
-    String scan();
+    String readStringWithPrompt(String prompt);
+
+    int readIntForRange(int min, int max, String errorMessage);
+
+    int readIntForRangeWithPrompt(int min, int max, String prompt, String errorMessage);
 }

@@ -1,6 +1,7 @@
 package ru.otus.hw.service;
 
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -9,16 +10,21 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 @Service
 public class StreamsIOService implements IOService {
-    private final PrintStream printStream;
-    private final InputStream inputStream;
+    private static final int MAX_ATTEMPTS = 10;
 
-    public StreamsIOService(PrintStream printStream, InputStream inputStream) {
+    private final PrintStream printStream;
+
+    private final Scanner scanner;
+
+    public StreamsIOService(@Value("#{T(System).out}") PrintStream printStream,
+                            @Value("#{T(System).in}") InputStream inputStream) {
 
         this.printStream = printStream;
-        this.inputStream = inputStream;
+        this.scanner = new Scanner(inputStream);
     }
 
     @Override
@@ -31,17 +37,37 @@ public class StreamsIOService implements IOService {
         printStream.printf(s + "%n", args);
     }
 
-    @SneakyThrows
     @Override
-    public String scanWithLegend(String legend) {
-        printStream.println(legend);
-        return scan();
+    public String readString() {
+        return scanner.nextLine();
     }
 
-    @SneakyThrows
     @Override
-    public String scan() {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        return reader.readLine();
+    public String readStringWithPrompt(String prompt) {
+        printLine(prompt);
+        return scanner.nextLine();
+    }
+
+    @Override
+    public int readIntForRange(int min, int max, String errorMessage) {
+        for (int i = 0; i < MAX_ATTEMPTS; i++) {
+            try {
+                var stringValue = scanner.nextLine();
+                int intValue = Integer.parseInt(stringValue);
+                if (intValue < min || intValue > max) {
+                    throw new IllegalArgumentException();
+                }
+                return intValue;
+            } catch (IllegalArgumentException e) {
+                printLine(errorMessage);
+            }
+        }
+        throw new IllegalArgumentException("Error during reading int value");
+    }
+
+    @Override
+    public int readIntForRangeWithPrompt(int min, int max, String prompt, String errorMessage) {
+        printLine(prompt);
+        return readIntForRange(min, max, errorMessage);
     }
 }
