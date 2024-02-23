@@ -10,6 +10,7 @@ import ru.otus.hw.domain.TestResult;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 
 class TestServiceImplTest {
@@ -26,8 +27,8 @@ class TestServiceImplTest {
         Mockito.when(questionDao.findAll()).thenReturn(List.of(TEST_QUESTION));
         TestServiceImpl testService = new TestServiceImpl(ioService, questionDao);
         TestResult testResult = testService.executeTestFor(TEST_STUDENT);
-        assert(testResult.getRightAnswersCount() == 1);
-        assert((long) testResult.getAnsweredQuestions().size() == 1);
+        assertEquals(testResult.getRightAnswersCount(), 1);
+        assertEquals(testResult.getAnsweredQuestions().size(), 1);
     }
 
 }
