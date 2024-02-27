@@ -11,7 +11,9 @@ import ru.otus.hw.domain.TestResult;
 @RequiredArgsConstructor
 public class TestServiceImpl implements TestService {
     public static final String CHOOSE_ANSWER_CODE = "TestService.choose.the.answer";
+
     public static final String INVALID_ANSWER_CODE = "TestService.choose.invalid.answer";
+
     private final LocalizedIOService ioService;
 
     private final QuestionDao questionDao;
