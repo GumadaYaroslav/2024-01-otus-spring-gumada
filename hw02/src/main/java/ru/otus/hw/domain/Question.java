@@ -1,4 +1,6 @@
 package ru.otus.hw.domain;
 
-public record Question(String text, Answer answer) {
+import java.util.List;
+
+public record Question(String text, List<Answer> answers) {
 }

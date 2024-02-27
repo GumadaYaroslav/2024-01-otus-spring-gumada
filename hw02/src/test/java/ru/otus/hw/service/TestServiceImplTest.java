@@ -22,7 +22,7 @@ class TestServiceImplTest {
     void TestServiceImpl_should_returnValidTestResult() {
         IOService ioService = Mockito.mock(IOService.class);
         Mockito.doNothing().when(ioService).printLine(any());
-        Mockito.when(ioService.readStringWithPrompt(TEST_QUESTION.text())).thenReturn(TEST_QUESTION.answer().text());
+        Mockito.when(ioService.readStringWithPrompt(TEST_QUESTION.text())).thenReturn(TEST_QUESTION.answers().text());
         QuestionDao questionDao = Mockito.mock(QuestionDao.class);
         Mockito.when(questionDao.findAll()).thenReturn(List.of(TEST_QUESTION));
         TestServiceImpl testService = new TestServiceImpl(ioService, questionDao);
