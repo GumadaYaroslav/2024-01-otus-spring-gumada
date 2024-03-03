@@ -1,9 +1,7 @@
 package ru.otus.hw.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.ApplicationArguments;
 import org.springframework.shell.command.annotation.Command;
-import org.springframework.stereotype.Service;
 
 @Command(group = "Run Test Command")
 @RequiredArgsConstructor
