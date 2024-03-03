@@ -4,4 +4,4 @@ target/
 spring-shell.log
 !**/src/main/**/target/
 !**/src/test/**/target/
-.DS_Store
+**/.DS_Store
