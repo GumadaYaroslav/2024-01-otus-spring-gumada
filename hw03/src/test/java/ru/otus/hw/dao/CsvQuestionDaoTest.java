@@ -2,9 +2,7 @@ package ru.otus.hw.dao;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import ru.otus.hw.config.AppProperties;
 import ru.otus.hw.config.TestFileNameProvider;
-import ru.otus.hw.dao.CsvQuestionDao;
 import ru.otus.hw.domain.Question;
 import ru.otus.hw.exceptions.QuestionReadException;
 

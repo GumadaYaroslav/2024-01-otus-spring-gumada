@@ -4,7 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import ru.otus.hw.domain.Student;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 class StudentServiceImplTest {
     public static final String STUDENT_FIRST_NAME = "Ivan";
