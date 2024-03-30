@@ -1,0 +1,5 @@
+${AnsiBackground.GREEN}
+  /\_/\
+ ( o.o )   
+  > ^ <   Spring Otus
+${AnsiBackground.DEFAULT}
