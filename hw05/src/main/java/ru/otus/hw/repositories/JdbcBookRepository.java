@@ -1,20 +1,18 @@
 package ru.otus.hw.repositories;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -50,7 +48,18 @@ public class JdbcBookRepository implements BookRepository {
 
     @Override
     public List<Book> findAll() {
-        return new ArrayList<>();
+        return jdbc.query("""
+                select 
+                    b.id as id,
+                    b.title as title,
+                    b.author_id as author_id,
+                    b.genre_id as genre_id,
+                    a.full_name as author_name,
+                    g.name as genre_name
+                from books b
+                left join authors a ON b.author_id = a.id
+                left join genres g ON b.genre_id = g.id;
+                """, new BookRowMapper());
     }
 
     @Override
@@ -63,7 +72,13 @@ public class JdbcBookRepository implements BookRepository {
 
     @Override
     public void deleteById(long id) {
-        //...
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", id);
+        Optional<Book> book = findById(id);
+        if (book.isEmpty()) {
+            throw new EntityNotFoundException(String.format("Book with id = %s not found", id));
+        }
+        jdbc.update("delete from books where id = :id",params);
     }
 
     private Book insert(Book book) {
@@ -75,8 +90,8 @@ public class JdbcBookRepository implements BookRepository {
                         "genre_id", book.getGenre().getId())
         );
         String sqlQuery = """
-                INSERT INTO books (title, author_id, genre_id)
-                VALUES (:book_title, :author_id, :genre_id)
+                insert into books (title, author_id, genre_id)
+                values (:book_title, :author_id, :genre_id)
                 """;
         jdbc.update(sqlQuery, parameterSource, keyHolder);
         //noinspection DataFlowIssue
@@ -85,8 +100,20 @@ public class JdbcBookRepository implements BookRepository {
     }
 
     private Book update(Book book) {
-        //...
-        // Выбросить EntityNotFoundException если не обновлено ни одной записи в БД
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", book.getId());
+        params.addValue("title", book.getTitle());
+        params.addValue("author_id", book.getAuthor().getId());
+        params.addValue("genre_id", book.getGenre().getId());
+        Optional<Book> checkBook = findById(book.getId());
+        if (checkBook.isEmpty()) {
+            throw new EntityNotFoundException(String.format("Book with id = %s not found", book.getId()));
+        }
+        jdbc.update("""
+                update books 
+                set title = :title, author_id = :author_id, genre_id = :genre_id
+                where id = :id
+                """, params);
         return book;
     }
 
