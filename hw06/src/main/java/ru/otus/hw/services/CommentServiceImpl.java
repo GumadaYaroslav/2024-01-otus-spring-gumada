@@ -13,6 +13,8 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
+    private static final String BOOK_NOT_FOUND_EXCEPTION_TEMPLATE = "No book with id %s";
+    private static final String COMMENT_NOT_FOUND_EXCEPTION_TEMPLATE = "No comment with id %s";
 
     CommentRepository commentRepository;
     BookService bookService;
@@ -29,14 +31,19 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment insert(String text, long bookId) {
-        Book book = bookService.findById(bookId).orElseThrow(EntityNotFoundException::new);
+        Book book = bookService.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException(BOOK_NOT_FOUND_EXCEPTION_TEMPLATE
+                        .formatted(bookId)));
         return commentRepository.save(new Comment(0, text, book));
     }
 
     @Override
     public Comment update(long id, String text) {
-        Comment comment = commentRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        Book book = bookService.findById(comment.getId()).orElseThrow(EntityNotFoundException::new);
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(COMMENT_NOT_FOUND_EXCEPTION_TEMPLATE.formatted(id)));
+        Book book = bookService.findById(comment.getId())
+                .orElseThrow(() -> new EntityNotFoundException(BOOK_NOT_FOUND_EXCEPTION_TEMPLATE
+                        .formatted(comment.getBook().getId())));
         return commentRepository.save(new Comment(id, text, book));
     }
 
