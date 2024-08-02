@@ -2,21 +2,27 @@ package ru.otus.hw.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "genres")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Genre {
-    @Id
+@Table(name = "comments")
+public class Comment {
+
     @Column
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     private long id;
 
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "text", nullable = false, unique = false)
     @Getter
-    private String name;
+    private String text;
+
+    @ManyToOne(targetEntity = Book.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_id")
+    @Getter
+    private Book book;
 }
