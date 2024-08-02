@@ -1,0 +1,47 @@
+package ru.otus.hw.services;
+
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import ru.otus.hw.models.Book;
+import ru.otus.hw.models.Comment;
+import ru.otus.hw.repositories.CommentRepository;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class CommentServiceImpl implements CommentService {
+
+    CommentRepository commentRepository;
+    BookService bookService;
+
+    @Override
+    public List<Comment> findAllCommentsByBookId(long bookId) {
+        return commentRepository.getAllCommentsByBookId(bookId);
+    }
+
+    @Override
+    public Optional<Comment> findById(long id) {
+        return commentRepository.findById(id);
+    }
+
+    @Override
+    public Comment insert(String text, long bookId) {
+        Book book = bookService.findById(bookId).orElseThrow(EntityNotFoundException::new);
+        return commentRepository.save(new Comment(0, text, book));
+    }
+
+    @Override
+    public Comment update(long id, String text) {
+        Comment comment = commentRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        Book book = bookService.findById(comment.getId()).orElseThrow(EntityNotFoundException::new);
+        return commentRepository.save(new Comment(id, text, book));
+    }
+
+    @Override
+    public void deleteById(long id) {
+        commentRepository.deleteById(id);
+    }
+}
