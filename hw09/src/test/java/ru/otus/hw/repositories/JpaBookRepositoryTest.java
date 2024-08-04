@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("Репозиторий на основе Jpa для работы с книгами ")
 @DataJpaTest
 @Import({JpaBookRepository.class, JpaGenreRepository.class})
-class JpaBookRepositoryTest {
+public class JpaBookRepositoryTest {
 
     @Autowired
     private JpaBookRepository repository;
@@ -120,7 +120,7 @@ class JpaBookRepositoryTest {
                 .toList();
     }
 
-    private static List<Book> getDbBooks() {
+    public static List<Book> getDbBooks() {
         var dbAuthors = getDbAuthors();
         var dbGenres = getDbGenres();
         return getDbBooks(dbAuthors, dbGenres);
