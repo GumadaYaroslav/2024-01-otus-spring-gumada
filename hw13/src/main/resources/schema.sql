@@ -28,3 +28,13 @@ create table comments
     book_id bigint,
     primary key (id)
 );
+
+create table users
+(
+    id       bigserial,
+    username varchar(255) unique,
+    password varchar(255),
+    role     varchar(100),
+    primary key (id)
+);
+
