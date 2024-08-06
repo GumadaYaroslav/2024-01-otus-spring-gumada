@@ -22,6 +22,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -76,6 +77,13 @@ class BookControllerTest {
     }
 
     @Test
+    public void shouldTrowErrorIfBookDontExist() throws Exception {
+        mockMvc.perform(get("/edit/500"))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+    }
+
+    @Test
     public void shouldCorrectAddNewBook() throws Exception {
         BookModifyDto expectedResult = new BookModifyDto(0L, "BookTitle_4", 3, 3);
         mockMvc.perform(post("/create")
@@ -89,6 +97,7 @@ class BookControllerTest {
     @Test
     public void shouldCorrectUpdateBook() throws Exception {
         BookModifyDto expectedResult = new BookModifyDto(2L, "BookTitleUpdate", 3, 3);
+        when(bookService.findById(expectedResult.getId())).thenReturn(Optional.of(new Book()));
         mockMvc.perform(post("/edit")
                         .param("id", "2")
                         .flashAttr("book", expectedResult))
@@ -101,9 +110,40 @@ class BookControllerTest {
     }
 
     @Test
+    public void shouldTrowBadRequestIfUpdateBookUseNotExistingAuthorOrGenre() throws Exception {
+        BookModifyDto invalidAuthorIdBook = new BookModifyDto(2L, "BookTitleUpdate", 500, 3);
+        mockMvc.perform(post("/edit")
+                        .param("id", "2")
+                        .flashAttr("book", invalidAuthorIdBook))
+                .andExpect(status().isBadRequest());
+        BookModifyDto invalidGenreIdBook = new BookModifyDto(2L, "BookTitleUpdate", 2, 500);
+        mockMvc.perform(post("/edit")
+                        .param("id", "2")
+                        .flashAttr("book", invalidGenreIdBook))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    @Test
+    public void shouldTrowBadRequestIfUpdateBookDontExist() throws Exception {
+        BookModifyDto expectedResult = new BookModifyDto(2L, "BookTitleUpdate", 3, 3);
+        mockMvc.perform(post("/edit")
+                        .param("id", "500")
+                        .flashAttr("book", expectedResult))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void shouldCorrectDeleteBookById() throws Exception {
+        when(bookService.findById(1)).thenReturn(Optional.of(new Book()));
         mockMvc.perform(post("/delete?id=1"))
                 .andExpect(status().is(302));
         verify(bookService, times(1)).deleteById(1L);
+    }
+
+    @Test
+    public void shouldTrowBadRequestIfDeletingNotExistingBook() throws Exception {
+        mockMvc.perform(post("/delete?id=500"))
+                .andExpect(status().isBadRequest());
     }
 }

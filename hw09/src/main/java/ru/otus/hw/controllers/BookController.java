@@ -87,6 +87,7 @@ public class BookController {
             redirectAttributes.addFlashAttribute(BindingResult.MODEL_KEY_PREFIX + "book", bindingResult);
             return "redirect:/edit/" + bookId;
         }
+        bookService.findById(bookId).orElseThrow(EntityNotFoundException::new);
         bookService.update(bookId, bookUpdateDto.getTitle(), bookUpdateDto.getAuthorId(), bookUpdateDto.getGenreId());
         return "redirect:/";
     }
@@ -100,6 +101,7 @@ public class BookController {
 
     @PostMapping("/delete")
     public String deleteBook(@RequestParam("id") long id, Model model) {
+        bookService.findById(id).orElseThrow(EntityNotFoundException::new);
         bookService.deleteById(id);
         return "redirect:/";
     }
