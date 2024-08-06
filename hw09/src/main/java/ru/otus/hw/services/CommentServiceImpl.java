@@ -16,8 +16,8 @@ public class CommentServiceImpl implements CommentService {
     private static final String BOOK_NOT_FOUND_EXCEPTION_TEMPLATE = "No book with id %s";
     private static final String COMMENT_NOT_FOUND_EXCEPTION_TEMPLATE = "No comment with id %s";
 
-    CommentRepository commentRepository;
-    BookService bookService;
+    private final CommentRepository commentRepository;
+    private final BookService bookService;
 
     @Override
     public List<Comment> findAllCommentsByBookId(long bookId) {
