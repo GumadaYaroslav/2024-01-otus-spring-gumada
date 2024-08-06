@@ -3,6 +3,7 @@ package ru.otus.hw.services;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
 import ru.otus.hw.repositories.CommentRepository;
@@ -16,8 +17,8 @@ public class CommentServiceImpl implements CommentService {
     private static final String BOOK_NOT_FOUND_EXCEPTION_TEMPLATE = "No book with id %s";
     private static final String COMMENT_NOT_FOUND_EXCEPTION_TEMPLATE = "No comment with id %s";
 
-    CommentRepository commentRepository;
-    BookService bookService;
+    private final CommentRepository commentRepository;
+    private final BookService bookService;
 
     @Override
     public List<Comment> findAllCommentsByBookId(long bookId) {
@@ -30,6 +31,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public Comment insert(String text, long bookId) {
         Book book = bookService.findById(bookId)
                 .orElseThrow(() -> new EntityNotFoundException(BOOK_NOT_FOUND_EXCEPTION_TEMPLATE
@@ -38,6 +40,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public Comment update(long id, String text) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(COMMENT_NOT_FOUND_EXCEPTION_TEMPLATE.formatted(id)));
@@ -48,6 +51,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public void deleteById(long id) {
         commentRepository.deleteById(id);
     }
